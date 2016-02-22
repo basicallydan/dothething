@@ -1,15 +1,19 @@
 import flask
 from flask import Flask, request
 import subprocess
+import configparser
 
 app = Flask(__name__)
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 
 @app.route("/handle-push", methods=['POST'])
 def handle_push():
     resp = flask.Response('')
     if request.method == 'POST':
-        working_directory = '/Users/dan/Development/danhough.com'
+        working_directory = config['DEFAULT']['WorkingDirectory']
         d = request.data
         resp = flask.Response(d)
         resp.headers['content-type'] = 'application/json'
