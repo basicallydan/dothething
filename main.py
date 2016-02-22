@@ -41,6 +41,8 @@ def handle_push():
             return resp
 
         git_process.communicate()
+        p = subprocess.Popen(['npm', 'install'], cwd=working_directory)
+        p.communicate()
 
         p = subprocess.Popen(['./node_modules/gulp-cli/bin/gulp.js',
                               'deploy',
