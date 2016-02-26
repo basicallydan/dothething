@@ -22,8 +22,7 @@ def handle_push():
 
         # If it's the master branch use master
         if json['ref'] == 'refs/heads/master':
-            git_process = subprocess.Popen(['git', 'fetch',
-                                            'origin', json['after']],
+            git_process = subprocess.Popen(['git', 'fetch',],
                                            cwd=working_directory)
             git_process.communicate()
             git_process = subprocess.Popen(['git', 'checkout', json['after']],
