@@ -20,9 +20,6 @@ def handle_push():
         json = request.get_json()
         env_flag = '--local'
 
-        ruby_switch = subprocess.Popen(['rvm', 'use', '2.0.0'])
-        ruby_switch.communicate()
-
         # If it's the master branch use master
         if json['ref'] == 'refs/heads/master':
             git_process = subprocess.Popen(['git', 'fetch','origin','master'],
