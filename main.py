@@ -19,23 +19,23 @@ def handle_push():
         resp.headers['content-type'] = 'application/json'
         json = request.get_json()
         env_flag = '--local'
+        branch = None
+
+        if 'refs/heads' in json['ref']:
+            branch = json['ref'].split('/')[2]
+
+        if branch != None:
+            git_process = subprocess.Popen(['git', 'fetch', 'origin', branch],
+                                           cwd=working_directory)
+            git_process.communicate()
+            git_process = subprocess.Popen(['git', 'checkout', json['after']],
+                                           cwd=working_directory)
 
         # If it's the master branch use master
-        if json['ref'] == 'refs/heads/master':
-            git_process = subprocess.Popen(['git', 'fetch','origin','master'],
-                                           cwd=working_directory)
-            git_process.communicate()
-            git_process = subprocess.Popen(['git', 'checkout', json['after']],
-                                           cwd=working_directory)
+        if branch == 'master':
             env_flag = '--live'
         # If it's the dev branch use dev
-        elif json['ref'] == 'refs/heads/staging':
-            git_process = subprocess.Popen(['git', 'fetch',
-                                            'origin', 'staging'],
-                                           cwd=working_directory)
-            git_process.communicate()
-            git_process = subprocess.Popen(['git', 'checkout', json['after']],
-                                           cwd=working_directory)
+        elif branch == 'staging':
             env_flag = '--dev'
         else:
             return resp
