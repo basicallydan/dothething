@@ -20,17 +20,21 @@ def handle_push():
         json = request.get_json()
         env_flag = '--local'
 
+        ruby_switch = subprocess.Popen(['rvm', 'use', '2.0.0'])
+        ruby_switch.communicate()
+
         # If it's the master branch use master
         if json['ref'] == 'refs/heads/master':
-            git_process = subprocess.Popen(['git', 'fetch',],
+            git_process = subprocess.Popen(['git', 'fetch','origin','master'],
                                            cwd=working_directory)
             git_process.communicate()
             git_process = subprocess.Popen(['git', 'checkout', json['after']],
                                            cwd=working_directory)
+            env_flag = '--live'
         # If it's the dev branch use dev
         elif json['ref'] == 'refs/heads/staging':
             git_process = subprocess.Popen(['git', 'fetch',
-                                            'origin', json['after']],
+                                            'origin', 'staging'],
                                            cwd=working_directory)
             git_process.communicate()
             git_process = subprocess.Popen(['git', 'checkout', json['after']],
@@ -53,8 +57,8 @@ def handle_push():
 
         git_process.communicate()
 
-        print(str(out))
-        print(str(err))
+        print("Output: %s" % str(out))
+        print("Errors %s" % str(err))
 
     return resp
 
