@@ -42,8 +42,31 @@ pip install -r requirements.txt
 
 Now make a new upstart script in `/etc/init` called `dothething.conf`. The contents should be something like this, replacing directories to whatever you've been using thus far:
 
+#### Step 4: Configure uWSGI
+
+Use `sample.config.ini` to come up with a suitable config file.
+
+#### Step 5: Hook up nginx
+
+Create a new `nginx` site config file in `conf.d` or `sites-enabled` or wherever you put them, and fill it with something like this.
+
 ```
-description "uWSGI server instance configured to serve dothething.ninja"
+server {
+    listen       hooks.yoursite.com:80;
+    server_name  hooks.yoursite.com;
+    client_max_body_size 10M;
+
+    location / {
+      include uwsgi_params;
+      uwsgi_pass unix:/src/dothething/dothething.sock;
+    }
+}
+```
+
+#### Step 6: Create an upstart script for `dothething`
+
+```
+description "uWSGI server instance configured to serve dothething"
 
 start on runlevel [2345]
 stop on runlevel [!2345]
