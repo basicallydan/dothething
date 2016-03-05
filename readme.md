@@ -25,7 +25,7 @@ git@github.com:basicallydan/dothething.git
 
 `cd` into the directory it's been cloned into, and use `virtualenv` to create a new virtual environment for `dothething`. You may put it into this directory using `env` or `venv` if you like.
 
-#### Step 2: Get the requirements
+#### Step 2: Install the Python requirements
 
 ```
 # Replace the path for python3 with whatever your python3 path is.
@@ -34,13 +34,11 @@ virtualenv --python=/usr/bin/python3
 
 Get your shell into that environment using `source venv/bin/activate`.
 
-Install the requirements:
+Use `pip` to install requiremements the requirements:
 
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
-
-Now make a new upstart script in `/etc/init` called `dothething.conf`. The contents should be something like this, replacing directories to whatever you've been using thus far:
 
 #### Step 4: Configure your server
 
@@ -56,7 +54,7 @@ Use `sample.config.ini` to come up with a suitable config file. There are two pa
 
 Next you can create a different config section for each branch that you'd like to handle the webhook requests for. By that I mean, if a commit is pushed to a certain branch, you can have certain commands that will run only for pushes to that branch.
 
-In each section you can specify an array:
+In each section you can specify an array of commands  to execute after the latest commit has been checked out.
 
 ```
 commands = [
@@ -89,6 +87,8 @@ server {
 ```
 
 #### Step 6: Create an upstart script for `dothething`
+
+Now make a new upstart script in `/etc/init` called `dothething.conf`. The contents should be something like this, replacing directories to whatever you've been using thus far:
 
 ```
 description "uWSGI server instance configured to serve dothething"
